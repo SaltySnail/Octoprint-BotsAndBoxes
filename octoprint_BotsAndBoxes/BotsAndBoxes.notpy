@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+import subprocess
+import sys
+import socket
+
+import octoprint.plugin
+
+class BotsAndBoxesPlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.SettingsPlugin):
+    def on_after_startup(self):
+        self._logger.info("BotsAndBoxes is starting")
+        self.main()
+    
+    def init(self):
+        tmp=subprocess.call("cd ~/Documents/C++/BotsAndBoxes/ && make", shell = True)
+        print(tmp)
+        tmp=subprocess.call("~/Documents/C++/BotsAndBoxes/BotsAndBoxes", shell = True)
+        #print(tmp)
+        HOST, PORT = "localhost", 50076
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((HOST, PORT))
+        return s
+    
+    def get_settings_defaults(self):
+        return dict(url="https://en.wikipedia.org/wiki/Hello_world")
+    
+    def get_template_vars(self):
+        return dict(url=self._settings.get(["url"]))
+
+    def send_state(self, s, state):
+      message = str(state)
+      messageBytes = message.encode('utf-8')
+      s.send(b'1')
+      s.recv(1000)
+      s.send(messageBytes)
+
+    def main(self):
+        s = self.init()
+        while(1):
+            self._logger.info("Busy!")
+            send_state(s, 0)                
+
+__plugin_name__ = "BotsAndBoxes"
+__plugin_version__ = "1.0.0"
+__plugin_description__ = "A bot plugin that makes your 3d printer a worthy dots and boxes foe"
+__plugin_pythoncompat__ = ">=2.7,<4"
+__plugin_implementation__ = BotsAndBoxesPlugin()

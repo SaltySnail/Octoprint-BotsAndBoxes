@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_BotsAndBoxes/templates *
+recursive-include octoprint_BotsAndBoxes/translations *
+recursive-include octoprint_BotsAndBoxes/static *
