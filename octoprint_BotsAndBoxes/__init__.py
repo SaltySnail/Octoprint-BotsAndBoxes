@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+from jinja2 import Template
 
 ### (Don't forget to remove me)
 # This is a basic skeleton for your plugin's __init__.py. You probably want to adjust the class name of your plugin
@@ -11,14 +12,19 @@ from __future__ import absolute_import, unicode_literals
 
 import octoprint.plugin
 
-class BotsandboxesPlugin(octoprint.plugin.StartupPlugin,
+class BotsAndBoxesPlugin(octoprint.plugin.StartupPlugin,
     octoprint.plugin.TemplatePlugin,
     octoprint.plugin.SettingsPlugin,
+    octoprint.plugin.SimpleApiPlugin,
     octoprint.plugin.AssetPlugin
 ):
+
+    def __init__(self):
+       self.commandss=0
+       
     def on_after_startup(self):
         self._logger.info("Hello World! (more: %s)" % self._settings.get(["url"]))
-    
+
     ##~~ SettingsPlugin mixin
 
     def get_settings_defaults(self):
@@ -35,10 +41,21 @@ class BotsandboxesPlugin(octoprint.plugin.StartupPlugin,
 
     def get_assets(self):
         return dict(
-            js=["js/botsandboxes.js"],
-            css=["css/botsandboxes.css"],
-            less=["less/botsandboxes.less"]
+            js=["js/BotsAndBoxes.js"],
+            css=["css/BotsAndBoxes.css"],
+            less=["less/BotsAndBoxes.less"]
         )
+
+    def myfunction(self):
+        self._logger.info("Boem Biem BamBoem Biem BamBoem Biem BamBoem Biem BamBoem Biem BamBoem Biem BamBoem Biem BamBoem Biem BamBoem Biem BamBoem Biem Bam")
+
+    def get_api_commands(self):
+        self._logger.info("Manually triggered get_api")
+        return dict(turnOn=["ip"])
+
+    def on_api_command(self, command, data):
+        if command == 'turnOn':
+            self._logger.info("Manually triggered!")
     ##~~ AssetPlugin mixin
 
     #def get_assets(self):
@@ -58,7 +75,7 @@ class BotsandboxesPlugin(octoprint.plugin.StartupPlugin,
         # for details.
         return {
             "BotsAndBoxes": {
-                "displayName": "Botsandboxes Plugin",
+                "displayName": "BotsAndBoxes",
                 "displayVersion": self._plugin_version,
 
                 # version check: github repository
@@ -76,7 +93,7 @@ class BotsandboxesPlugin(octoprint.plugin.StartupPlugin,
 # If you want your plugin to be registered within OctoPrint under a different name than what you defined in setup.py
 # ("OctoPrint-PluginSkeleton"), you may define that here. Same goes for the other metadata derived from setup.py that
 # can be overwritten via __plugin_xyz__ control properties. See the documentation for that.
-__plugin_name__ = "Botsandboxes Plugin"
+__plugin_name__ = "BotsAndBoxes"
 
 
 # Set the Python version your plugin is compatible with below. Recommended is Python 3 only for all new plugins.
@@ -86,7 +103,7 @@ __plugin_pythoncompat__ = ">=3,<4"  # Only Python 3
 
 def __plugin_load__():
     global __plugin_implementation__
-    __plugin_implementation__ = BotsandboxesPlugin()
+    __plugin_implementation__ = BotsAndBoxesPlugin()
 
     global __plugin_hooks__
     __plugin_hooks__ = {
